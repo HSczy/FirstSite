@@ -1,0 +1,241 @@
+{% extends 'base.html' %}
+
+{% load staticfiles read_statistic_tags comment_tags like_tags cache %}
+
+{% block title %}Do'N Achieve-{{ blog.title }}{% endblock %}
+
+{% block extend_css %}
+  <link rel="stylesheet" href="{% static 'highlight/github.css' %}">
+  <link rel="stylesheet" href="{% static 'highlight/markdown.css' %}">
+  <link rel="stylesheet" href="{% static 'simditor/simditor.css' %}">
+  <link rel="stylesheet" href="{% static 'simditor/simditor-emoji.css' %}">
+  <link rel="stylesheet" href="{% static 'CSS/blog_detail.css' %}">
+{% endblock %}
+
+{% block extend_script %}
+  <script type="text/javascript" src="{% static "simditor/module.js" %}"></script>
+  <script type="text/javascript" src="{% static "simditor/hotkeys.js" %}"></script>
+  <script type="text/javascript" src="{% static "simditor/simditor.js" %}"></script>
+  <script type="text/javascript" src="{% static "simditor/marked.min.js" %}"></script>
+  <script type="text/javascript" src="{% static "simditor/simditor-marked.js" %}"></script>
+  <script type="text/javascript" src="{% static "simditor/simditor-emoji.js" %}"></script>
+{% endblock %}
+
+{% block content %}
+
+  <div id="blog" class="container">
+    <div class="row">
+      <div id="main-content" class="col-lg-9">
+        <div id="breadcrumb">
+          <ol class="breadcrumb my-2">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">首页</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'blog_category' category.slug_name %}">
+              {{ category.category_name }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ blog.title }}</li>
+          </ol>
+        </div>
+        <div class="card mb-3" id="blog">
+          <div class="card-body pb-0">
+            <div class="card-title">
+              <h3 class="title text-center font-weight-bold text-secondary">{{ blog.title }}</h3>
+              <hr>
+              <div class="text-center f-13">
+                <span class="mx-2">{{ blog.created_time|date:'Y-m-d H:i:s' }}</span>
+                <span class="mx-2">阅读数量:{% read_num_count blog %}</span>
+                <a class="mx-2" href="#comment-area">评论数量:<span id="comment_counts">{% get_comments_counts blog %}</span></a>
+              </div>
+            </div>
+          <div class="card-body">
+            <div class="blog-content markdown-body f-17 ">
+            {{ blog.content|safe }}
+            </div>
+            <p class="font-weight-bold text-danger f-15">
+              <i class="fas fa-info-circle"></i>
+              本文为原创文章，分享请注明来自 <a href="{% url 'home' %}">Do'N Achieve</a>,本文地址：{{ blog.get_url }}
+            </p>
+          </div>
+          <div class="card-footer text-center mb-3">
+            <div id="blog_likes" class="like mx-auto" onclick="likeChange(this,'{% get_content_type blog %}'
+                    ,{{ blog.pk }})">
+              <span class="{% get_like_status blog %} fa-heart" id="like_change" title="你的赞赏，是对我的肯定"></span>
+              <span class="like_num">{% get_like_count blog %}</span>
+              <span class="f-16">喜欢</span>
+            </div>
+          </div>
+          <nav class="f-16 ">
+            <ul class="pagination justify-content-between mb-0">
+              <li class="page-item">
+                {% if previous_blog %}
+                  <a class="d-none d-md-block " href="{% url 'blog_detail' previous_blog.slug %}"><i class="fas
+                  fa-chevron-left"></i>{{ previous_blog.title|truncatechars:18 }}</a>
+                  <a class="d-block d-md-none" href="{% url 'blog_detail' previous_blog.slug %}"><i class="fas
+                  fa-chevron-left"></i>上一篇</a>
+                {% else %}
+                  <p>没有博客了</p>
+                {% endif %}
+              </li>
+              <li class="page-item">
+                {% if next_blog %}
+                  <a class="d-none d-md-block" href="{% url 'blog_detail' next_blog.slug %}"
+                  >{{ next_blog.title|truncatechars:18 }}<i class="fas
+                  fa-chevron-right"></i></a>
+                  <a class="d-block d-md-none" href="{% url 'blog_detail' next_blog.slug %}">下一篇<i class="fas
+                  fa-chevron-right"></i></a>
+                {% else %}
+                  <p>没有博客了</p>
+                {% endif %}
+              </li>
+            </ul>
+          </nav>
+
+        </div>
+        </div>
+        <div class="comment p-2" id="comment">
+          <div id="comment-textarea" class="mb-5">
+            {% include 'Blog/includes/comment_form.html' %}
+          </div>
+          <div class="container p-2 " id="comment-area">
+            {% include 'Blog/includes/comment_list.html' %}
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3">
+        <div class="markdown-toc d-none d-lg-block text-secondary">
+          {{ blog.toc|safe }}
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+      $('#comment_form').submit(function () {
+          $('#comment_error').val('');
+          if(editor.getValue()==''){
+              $('#comment_error').text('我们需要聆听你的声音')
+          }
+
+
+          $.ajax({
+                  url: "{% url 'comment_update' %}",
+                  type: 'POST',
+                  data: $(this).serialize(),
+                  cache: false,
+                  success: function (data) {
+                      console.log(data);
+                      if (data['status'] == 'SUCCESS') {
+                          if ($('#reply_comment_id').val()=='0'){
+                              // 插入评论
+                              var comment_html = '<div class="card root-card mb-2" id="root_'+data['pk']+'"><div class="card-body">' +
+                                  '<div class="row"><div class="container" id="comment-detail"><div id="avatar-div">' +
+                                  '<img src=\"'+ data['img_url']+'\" alt="'+ data['comment_user'] +
+                                  '" id="avatar"></div><div class="container text-left pl-1 ml-2">' +
+                                  '<a href="javascript:reply('+data['pk']+
+                                  ')" class="float-right small btn text-muted p-0 f-16">回复</a>' +
+                                  '<div class="like float-right pr-2" onclick="likeChange(this,\''+
+                                  data['content_type']+'\','+data['pk']+')"><span class="far fa-heart" ' +
+                                  'id="like_change" ></span><span class="like_num" > 0</span></div>'  +
+                                  '<p class="mb-0 f-15"><strong>'
+                                  + data['comment_user'] +'</strong><small class="text-danger">'+ data['extend_user'] +
+                                '</small></p><p class="mb-0 text-muted f-12"><small>'
+                                  + data['created_time'] +'</small></p></div></div>' +
+                                  '<div class="container markdown-body pl-5 ml-4 f-16" id="comment_'+data['pk']+'">'
+                                  +data['text']+'</div></div></div></div>';
+                              $('#comment_list').prepend(comment_html)
+                          } else {
+                              // 插入回复
+                              var reply_html = '<div class="card child-card ml-4"><div class="card-body"><div class="row">' +
+                                  '<div class="container"  id="comment-detail" ><div id="avatar-div" >' +
+                                  '<img src=\"' + data['img_url']+' \" alt="' + data['comment_user'] +
+                                  '" id="avatar"></div><div class="container text-left pl-1 ml-2">' +
+                                  '<a href="javascript:reply(' + data['pk'] + '' +
+                                  ')" class="float-right small text-muted btn p-0 f-16">回复</a>' +
+                                  '<div class="like float-right pr-2" onclick="likeChange(this,\''+
+                                  data['content_type']+'\','+data['pk']+')"><span class="far fa-heart" ' +
+                                  'id="like_change" ></span><span class="like_num" > 0</span></div>' +
+                                  '<p class="mb-0 f-15"><strong>'+
+                                  data['comment_user'] + ' <small class="text-danger">'+ data['extend_user']
+                                +'</small> <i class="fas fa-share"></i> ' + data['reply_to'] + '</strong> <small ' +
+                                'class="text-danger">'+ data['extend_reply_to'] +'</small></p><p class="mb-0 ' +
+                              'text-muted f-12"><small>' + data['created_time'] + '</small></p></div></div>' +
+                                  '<div class="container markdown-body pl-5 ml-4 f-16" id="comment_' + data['pk'] + '" >' +
+                                  data['text'] + '</div></div></div></div>';
+                              $('#root_' + data['root_pk']).append(reply_html)
+                          }
+                          // 清空评论框数据
+                          editor.setValue('')
+                          $('#reply_content_container').hide();
+                          $('#reply_comment_id').val('0');
+                          $('#no-comment').remove();
+                          $('body').animate({scrollTop:$('#comment_'+ data['pk']).offset().top - 200},300); //转到评论位置
+                          // 更新评论数
+                          $('#comment_counts').text(data['comment_count']);
+                      }else{
+                          //显示错误信息
+                          $('#comment_error').text(data['message'])
+                      }
+                  },
+              error:function (xhr) {
+              console.log(xhr);
+          }
+      });
+      return false;
+      }
+      )
+      ;
+
+      function reply(reply_comment_id) {
+          $('#comment_error').text('');
+          $('#reply_comment_id').val(reply_comment_id);
+          var html = $('#comment_' + reply_comment_id).html();
+          $('#reply_content').html(html);
+          $('#reply_content_container').show();
+          $('body').animate({
+              scrollTop: $('#comment_form').offset().top
+          }, 300);
+
+      }
+      //增加取消按钮
+      $('#cancel-comment').click(function () {
+        $('#reply_content_container').hide();
+        $('#reply_comment_id').val('0');
+        editor.setValue('')
+      });
+
+      function likeChange(obj,content_type,object_id) {
+          var is_liked = obj.getElementsByClassName('fas').length==0;
+          $.ajax({
+              url:"{% url 'like_change' %}",
+              type:'GET',
+              data:{
+                  content_type:content_type,
+                  object_id:object_id,
+                  is_liked:is_liked
+              },
+              cache:false,
+              success: function (data) {
+                  console.log(data);
+                  // 更新点赞状态
+                  if(data['status']=='SUCCESS'){
+                      var element = $(obj.getElementsByClassName('fa-heart'));
+                      if(is_liked){
+                          element.removeClass('far').addClass('fas')
+                      }else{
+                          element.removeClass('fas').addClass('far')
+                      }
+                      // 更新点赞数量
+                      var like_num = $(obj.getElementsByClassName('like_num'));
+                      like_num.text(data['like_num'])
+
+                  }else{
+                      alert(data['message'])
+                  }
+              },
+              error:function (xhr) {
+                  console.log(xhr)
+              }
+              })
+
+
+      }
+
+  </script>
+{% endblock %}

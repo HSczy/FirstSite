@@ -1,0 +1,94 @@
+/*时间线样式*/
+section.timeline{
+    border-top: 3px solid darkgrey;
+}
+
+.timeline ul.timeline li.timeline {
+    list-style-type: none;
+    position: relative;
+    width: 3px;
+    margin: 0 auto;
+    padding-top: 50px;
+    background: darkgrey;
+}
+
+.timeline ul.timeline li.timeline::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #2e6da4;
+}
+
+div#timeline-content{
+    box-shadow: 2px 2px 3px #aaaaaa;
+    border: none;
+}
+
+.timeline ul.timeline li.timeline div#timeline-content {
+    position: relative;
+    bottom: 0;
+    width: 400px;
+    padding: 15px;
+    background: #fff;
+}
+
+.timeline ul.timeline li.timeline div#timeline-content::before {
+    content: '';
+    position: absolute;
+    bottom: 7px;
+    width: 0;
+    height: 0;
+    border-style: solid;
+}
+
+.timeline ul.timeline li.timeline:nth-child(even) div#timeline-content {
+    left: 45px;
+}
+
+.timeline ul.timeline li.timeline:nth-child(even) div#timeline-content::before {
+    left: -15px;
+    border-width: 8px 16px 8px 0;
+    border-color: transparent #fff transparent transparent;
+}
+
+.timeline ul.timeline li.timeline:nth-child(odd) div#timeline-content {
+    left: -439px;
+}
+
+.timeline ul.timeline li.timeline:nth-child(odd) div#timeline-content::before {
+    right: -15px;
+    border-width: 8px 0 8px 16px;
+    border-color: transparent transparent transparent #fff;
+}
+@media screen and (max-width: 900px) {
+  .timeline ul.timeline li.timeline div#timeline-content {
+    width: 250px;
+  }
+  .timeline ul.timeline li.timeline:nth-child(odd) div#timeline-content {
+    left: -289px; /*250+45-6*/
+  }
+}
+@media screen and (max-width: 600px) {
+  .timeline ul.timeline li.timeline {
+    margin-left: 20px;
+  }
+
+  .timeline ul.timeline li.timeline div#timeline-content {
+    width: calc(100vw - 150px);
+  }
+
+  .timeline ul.timeline li.timeline:nth-child(odd) div#timeline-content {
+    left: 45px;
+  }
+
+  .timeline ul.timeline li.timeline:nth-child(odd) div#timeline-content::before {
+    left: -15px;
+    border-width: 8px 16px 8px 0;
+    border-color: transparent #fff transparent transparent;
+  }
+}

@@ -1,0 +1,75 @@
+.comment {
+    background-color: #ffffff;
+}
+
+.blog-content {
+        background-color: #ffffff;
+}
+
+div.child-card{
+    border-style: None;
+    border-top: 1px dashed rgba(0,0,0,.125);
+}
+
+div#reply_content_container{
+    border:solid 0.5px #cad8db;
+}
+
+div.simditor-body{
+    padding: 20px 15px !important;
+}
+
+img#avatar{
+    max-width: 100%;
+    max-height: 100%;
+}
+div#avatar-div{
+    height: 50px;
+    width: 50px;
+}
+
+div#comment-detail{
+    display:flex;
+}
+
+span#like_change{
+    cursor: pointer;
+    color:hotpink;
+}
+
+div#comment_card {
+    border: none;
+}
+div#comment_list{
+    padding: 0;
+}
+div#unsign_text{
+    background-color: #f6f6f6;
+}
+
+
+div#blog{
+    border: none;
+}
+#blog_likes{
+    cursor: pointer;
+    width: 80px;
+}
+
+/*长文字不换行*/
+.markdown-body{
+    word-wrap: break-word;
+    word-break: break-all;
+}
+/*toc样式列表*/
+div.markdown-toc{
+    position: fixed;
+    font-size: 20px;
+}
+div.markdown-toc ul li{
+    list-style-type: none;
+}
+.markdown-toc ul{
+    padding-left: 20px;
+}
+

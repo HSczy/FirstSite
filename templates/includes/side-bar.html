@@ -1,0 +1,50 @@
+{% load staticfiles %}
+<div class="col-lg-4">
+    <div class="card px-3 mb-2 mb-md-3 d-none d-lg-block border-0 rounded-0" id="self-card">
+      <div class="card-header bg-white px-0"><strong class="f-17"><i class="fas fa-id-card"></i>&nbsp;
+        个人空间</strong></div>
+      <div class="card-body">
+        <div class="card-text f-16 row " id="introduce">
+          <div class="text-center col-6">
+            <a href="https://github.com/HSczy" target="_blank">
+              <img src="{% static 'images/others/Github.png' %}" alt="Github" title="访问我的GitHub" >
+            <p>GitHub</p></a>
+          </div>
+          <div class="text-center col-6"id="introduce">
+            <a href="{% url 'timeline' %}">
+            <img src="{% static 'images/others/timeline.png' %}" alt="timeline" title="访问建站日志">
+            <p>建站日志</p></a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card border-0 rounded-0 px-3 mb-2 mb-md-3 mt-2" id="category-card">
+      <div class="card-header bg-white px-0"><strong class="f-17"><i class="fas fa-swatchbook"></i>&nbsp;博客分类</strong></div>
+      <ul class="list-group list-group-flush f-16">
+        {% for category in category_list %}
+        <li class="list-group-item category-item d-flex justify-content-between align-items-center pr-2 py-2">
+          <a href="{% url 'blog_category' category.slug_name %}">{{ category.category_name }}</a>
+          <span class="badge badge-primary badge-pill">{{ category.blog_count }}</span>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="card px-3 mb-2 mb-md-3  border-0 rounded-0" id="friendly-card">
+      <div class="card-header bg-white px-0"><strong class="f-17"><i class="fas fa-link"></i>&nbsp;友情链接</strong></div>
+      <div class="card-body py-2 px-0">
+        <ul class="card-text f-16 pl-0  ">
+          <li class="py-lg-2 py-1">
+            <a href="https://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000"
+               title="Python学习首选网站" target="_blank"
+            >廖旭峰的Python学习网站</a>
+          </li>
+          <li class="py-lg-2 py-1">
+            <a href="http://yshblog.com/" title="Django学习" target="_blank">杨仕航博客</a>
+          </li>
+          <li class="py-lg-2 py-1">
+            <a href="http://www.tendcode.com/" title="TendCode" target="_blank">TendCode</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>

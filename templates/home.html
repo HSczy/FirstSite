@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+
+{% block extend_css %}
+  <link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock %}
+
+
+
+{% block content %}
+<div class="container">
+  <div class="row justify-content-center">
+
+    <div class="col-lg-8">
+      {% block carousel %}
+        {% include 'includes/carousel.html' %}
+      {% endblock %}
+      <div id="blog-list" >
+        {% for blog in page_of_blogs %}
+          {% include 'includes/blog_list.html' %}
+        {% empty %}
+          <div>暂无博客，敬请期待</div>
+        {% endfor %}
+      </div>
+    </div>
+    <!--侧边栏-->
+    {% include 'includes/side-bar.html' %}
+  </div>
+</div>
+{% endblock %}
+

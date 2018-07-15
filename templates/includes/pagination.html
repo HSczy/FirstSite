@@ -1,0 +1,36 @@
+<nav aria-label="Page navigation">
+  <ul class="pagination justify-content-center">
+    <li class="page-item">
+      <!--上一页-->
+      {% if page_of_blogs.has_previous %}
+        <a class="page-link" href="?page={{ page_of_blogs.previous_page_number }}" aria-label="上一页">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      {% else %}
+        <span class="page-link" aria-hidden="true">&laquo;</span>
+      {% endif %}
+    </li>
+    <!--显示页码-->
+    {% for page_num in page_range %}
+      {% if page_num == page_of_blogs.number %}
+        <li class="page-item active"><span class="page-link">{{ page_num }}</span></li>
+      {% else %}
+        {% if page_num == '...' %}
+          <li class="page-item disabled"><span class="page-link">{{ page_num }}</span></li>
+        {% else %}
+          <li class="page-item"><a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a></li>
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+    <li class="page-item">
+    <!--下一页-->
+      {% if page_of_blogs.has_next %}
+        <a class="page-link" href="?page={{ page_of_blogs.next_page_number }}" aria-label="下一页">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      {% else %}
+        <span class="page-link" aria-hidden="true">&raquo;</span>
+      {% endif %}
+    </li>
+  </ul>
+</nav>

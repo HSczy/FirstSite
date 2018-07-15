@@ -1,0 +1,61 @@
+{% load notice_tags %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-3" role="navigation">
+  <div class="container">
+    <a class="navbar-brand" href="{% url 'home' %}">Do'N Achieve</a>
+    <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarSupportedContent">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item " id="page_home">
+          <a class="nav-link" href="{% url 'home' %}" id="home">
+            <i class="fas fa-home mr-2"></i>首页</a>
+        </li>
+        <li class="nav-item" id="page_archive">
+          <a class="nav-link" href="{% url 'archive' %}" id="archive">
+            <i class="fas fa-sitemap mr-2"></i>归档</a>
+        </li>
+        <li class="nav-item" id="page_about">
+          <a class="nav-link" href="{% url 'about' %}" id="about">
+            <i class="fas fa-glasses mr-2"></i>关于</a>
+        </li>
+      </ul>
+      {% if user.is_authenticated %}
+      {% get_notice_list_count user 'False' as msgnum %}
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="uesrDropdown" role="button" data-toggle="dropdown"
+               aria-haspopup="true" aria-expanded="false">
+              <img class="avatar" src="{{ user.get_avatar }}" alt="{{ user }}">
+                {{ user.get_nickname }}
+              {% if msgnum > 0 %}
+                <span class="msgnum text-center rounded" id="nav_msgnum">{{ msgnum }}</span>
+                {% if msgnum > 99 %}
+                  <span class="msgnum text-center rounded" id="nav_msgnum">99+</span>
+                {% endif %}
+              {% endif %}
+            </a>
+            <div class="dropdown-menu" aria-labelledby="userDropdown">
+              <a class="dropdown-item" href="{% url 'profile' %}">个人资料
+              {% if msgnum > 0 %}
+                <span class="msgnum float-right text-center rounded">{{ msgnum }}</span>
+              {% endif %}
+              </a>
+              {% if user.is_staff %}
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="{% url 'admin:index' %}">后台管理</a>
+              {% endif %}
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="{% url 'logout' %}">退出登录</a>
+            </div>
+          </li>
+        </ul>
+      {% else %}
+        <form class="form-inline ml-auto mb-0">
+          <a href="{% url 'login' %}?from={{ request.get_full_path }}" class="text-success">登录</a>
+          <a href="{% url 'signup' %}" class=" text-danger ml-2 ">注册</a>
+        </form>
+      {% endif %}
+    </div>
+  </div>
+</nav>

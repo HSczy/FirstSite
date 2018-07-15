@@ -1,0 +1,17 @@
+{% extends 'home.html' %}
+
+{% block title %}
+  Do'N Achieve-{{ category.category_name }}
+{% endblock %}
+
+{% block carousel %}
+  <div class="card border-0 rounded-0 px-3 mb-2 mb-md-3" id="category-detail">
+    <div class="card-header align-items-center bg-white  px-0">
+      <strong>博客分类：{{ category.category_name }}</strong>
+      <p class="float-right">共 <span class="text-success">{{ count }}</span> 篇</p>
+    </div>
+    <div class="card-body px-0">
+      <p class="">category's description</p>
+    </div>
+  </div>
+{% endblock %}

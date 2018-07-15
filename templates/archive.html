@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% load staticfiles cache %}
+
+{% block extend_css %}
+  <link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock %}
+
+{% block title %}
+  Do'N Achieve-归档
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      {% cache 7200 'archive_html' %}
+      <div class="card">
+        <div class="card-body">
+          {% regroup blog_list by created_time.year as blog_of_year %}
+          <ul class="pl-4">
+            {% for year in blog_of_year %}
+              <li>
+              {{ year.grouper }}年
+              {% regroup year.list by created_time.month as blog_of_month %}
+              <ul class="pl-4">
+                {% for blogs in blog_of_month %}
+                  <li>{{ blogs.grouper }}月(共{{ blogs.list|length }}篇)
+                  <ul class="pl-4">
+                    {% for blog in blogs.list %}
+                      <li class="text-secondary"> {{ blog.created_time|date:'m-d' }}&nbsp;&nbsp;&nbsp;<a href="{{ blog.get_url }}"
+                      target="_blank">{{ blog.title }}</a></li>
+                    {% endfor %}
+                  </ul>
+                  </li>
+                {% endfor %}
+              </ul>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+
+      </div>
+    {% endcache %}
+    </div>
+    <!--侧边栏-->
+    {% include 'includes/side-bar.html' %}
+  </div>
+</div>
+{% endblock %}

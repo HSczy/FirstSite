@@ -1,0 +1,60 @@
+{% load staticfiles %}
+
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="{% static 'bootstrap-4.0.0-dist/css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'fontawasome/css/all.css' %}">
+  <link rel="stylesheet" href="{% static 'css/base.css' %}">
+  {% block extend_css %}{% endblock %}
+  <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+  <script src="{% static 'bootstrap-4.0.0-dist/js/bootstrap.min.js' %}"></script>
+  {% block extend_script %}{% endblock %}
+  <title>{% block title %}Do'N Achiev{% endblock %}</title>
+</head>
+<body>
+<div class="wrap">
+  <div class="main">
+    {% block body %}
+      <!--导航栏-->
+      {% include 'includes/navbar.html' %}
+    {% endblock %}
+    <!--回到顶部-->
+    <div class="text-center" id="to-top">
+      <i class="fas fa-chevron-up" title="返回顶部" id="btn-top"></i>
+    </div>
+    <!--内容块-->
+    {% block content %}
+    {% endblock %}
+  </div>
+</div>
+
+<script>
+  $(window).scroll(function () {
+    $('#to-top').hide();
+    if ($(window).scrollTop() >= 600) {
+      $('#to-top').show();
+    }
+  });
+  $('#to-top').click(function () {
+    $('body,html').animate({scrollTop: 0}, 400);
+    return false
+  });
+  $('#{{ active_page }}').addClass('active')
+</script>
+{% block extend_made_script %}
+{% endblock %}
+
+<footer>
+  <div class="container-fluid mt-5">
+    <div class="card-body border-0 text-center">
+      <p class="f-15 mb-0">Copyright&nbsp;&copy;&nbsp;2018 <a href="https://github.com/HSczy" target="_blank">HSczy</a>
+      </p>
+      <p class="f-15 mb-0">Powered&nbsp;by&nbsp;Django&Bootstrap</p>
+      <p class="f-15 mb-0">Welcome&nbsp;to&nbsp;my&nbsp;blog&nbsp;,and&nbsp;enjoy&nbsp;yourself!</p>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

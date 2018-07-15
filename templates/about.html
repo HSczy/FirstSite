@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% load staticfiles cache %}
+
+{% block extend_css %}
+  <link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock %}
+
+{% block title %}
+  Do'N Achieve-关于
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      {% cache 7200 'about_html' %}
+      <div class="card border-0 p-3 f-16">
+        <h5 class="font-weight-bold mb-0">关于网站</h5>
+        <hr >
+        <ul class="pl-4 ml-2">
+          <li>本网站上线于2018年7月</li>
+          <li>本网站使用Django搭建，数据库使用MySQL，缓存使用redis, 前端使用Bootstrap</li>
+          <li>网站的源码在我的GitHub里，网站部署在搬瓦工VPS</li>
+          <li>Django是通过杨仕航老师的视频学习
+            <a href="https://space.bilibili.com/252028233/#/channel/detail?cid=28138" target="_blank" class="text-info">
+              Django 2 .0视屏教程
+            </a></li>
+          <li>网站前端的部分设计参考 <a class="text-info" href="http://www.tendcode.com">TendCode</a></li>
+          <li>前端的东西没有接触过，也是根据别人调试的东西一步步看一步步点慢慢理解</li>
+          <li>网站作为我的Django学习的阶段性总结</li>
+          <li>网站会发布我的学习心得和体会</li>
+          <li>欢迎各位一起学习一起进步</li>
+        </ul>
+        <h5 class="font-weight-bold mb-0">功能介绍</h5>
+        <hr >
+        <ul class="pl-4 ml-2">
+          <li>后台采用Django自带后台</li>
+          <li>采用Django-email系统发送验证码绑定邮箱</li>
+          <li>用户绑定邮箱后可以自定义头像、用户名和修改密码</li>
+          <li>阅读统计系统，在后台可现实访问的具体信息，访问者IP、时间等</li>
+          <li>点赞系统，文章可点赞，评论、回复均可点赞，前端ajax提交实时显示点赞状态</li>
+          <li>文章评论使用simditor富文本编辑器，支持markdown语法，评论树结构和回复功能</li>
+          <li>Django-signal的信息提示系统，评论回复均可的到提示</li>
+          <li>更多功能，敬请期待</li>
+        </ul>
+        <h5 class="font-weight-bold mb-0">建议反馈</h5>
+        <hr >
+        <ul class="pl-4 ml-2">
+          <li>发现问题和bug请向我反映</li>
+          <li>可在文章底下评论或通过邮件与我联系hsczyic@gmail.com</li>
+        </ul>
+        <h5 class="font-weight-bold mb-0">关于博主</h5>
+        <hr >
+        <ul class="pl-4 ml-2">
+          <li>2017年9月接触Python便被吸引，人生苦短，我用Python</li>
+          <li>用Python写过一些小应用和小爬虫</li>
+          <li>立志学习以从事相关行业工作，争取在30岁之前有5年的编程经验</li>
+        </ul>
+      </div>
+    {% endcache %}
+    </div>
+    <!--侧边栏-->
+    {% include 'includes/side-bar.html' %}
+  </div>
+</div>
+{% endblock %}

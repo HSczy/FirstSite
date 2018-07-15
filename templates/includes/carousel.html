@@ -1,0 +1,34 @@
+{% load staticfiles %}
+
+<div id="carousel" class="carousel slide mb-2" data-ride="carousel">
+  <ol class="carousel-indicators">
+    {% for carousel in carousel_list %}
+      {% if forloop.counter0 == 0 %}
+        <li data-target="#carousel" data-slide-to="0" class="active"></li>
+      {% else %}
+        <li data-target="#carousel" data-slide-to="{{ forloop.counter0 }}"></li>
+      {% endif %}
+    {% endfor %}
+  </ol>
+  <div class="carousel-inner">
+    {% for carousel in carousel_list %}
+      {% if forloop.counter0 == 0 %}
+        <div class="carousel-item active">
+      {% else %}
+        div class="carousel-item">
+      {% endif %}
+      <a href="{{ carousel.blog_url }}">
+      <img class="w-100" src="{{ carousel.carousel_img }}" title="{{ carousel.title }}">
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+  <a class="carousel-control-prev" href="#carousel" role="button" data-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="carousel-control-next" href="#carousel" role="button" data-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+  </a>
+</div>

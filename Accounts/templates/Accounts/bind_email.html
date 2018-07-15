@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  Do'N Achieve-{{ title }}
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <ol class="breadcrumb my-2">
+      <li class="breadcrumb-item"><a href="{% url 'profile' %}">个人中心</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
+    </ol>
+    <div class="row pl-5">
+      <div class="col-lg-6 col-md-8 col-sm-10">
+        <form method="post" novalidate enctype="multipart/form-data">
+          {% csrf_token %}
+          {% include 'includes/form.html' %}
+          <input type="submit" class="btn btn-success float-left"value="{{ title }}">
+          <button id="sendcode" class="btn btn-primary float-right">发送验证码</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block extend_made_script %}
+<script>
+  $('#sendcode').click(function () {
+    var email = $('#id_email').val();
+    $.ajax({
+        url: "{% url 'send_verification_code' %}",
+        type: "GET",
+        data: {
+          'email': email
+        },
+        cache:false,
+        success:function (data) {
+          if(data['status']=='ERROR'){
+            alert(data['status'])
+          }
+        }
+      });
+      // 把按钮变灰
+      $(this).addClass('disabled');
+      $(this).attr('disabled',true);
+      var time = 120;
+      $(this).text(time + '秒后重新发送验证码');
+      var interval = setInterval(() => {
+          if(time <= 0){
+              clearInterval(interval);
+              $(this).removeClass('disabled');
+              $(this).attr('disabled',false);
+              $(this).text('发送验证码');
+              return false;
+          }
+          time --;
+          $(this).text(time + '秒后重新发送验证码');
+      },1000);
+  })
+</script>
+{% endblock %}

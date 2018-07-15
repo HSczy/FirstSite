@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+{% load notice_tags %}
+
+{% block extend_css %}
+  <link rel="stylesheet" href="{% static 'css/timeline.css' %}">
+  <link rel="stylesheet" href="{% static 'highlight/github.css' %}">
+  <link rel="stylesheet" href="{% static 'highlight/markdown.css' %}">
+{% endblock %}
+
+{% block title %}
+  Do'N Achieve-建站日志
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <div class="mt-0">
+      <h3><i class="far fa-calendar"></i> 建站日志</h3>
+    </div>
+    <section class="timeline">
+      <ul class="timeline">
+        {% for timeline in timelines %}
+        <li class="timeline">
+          <div id="timeline-content">
+            <h4 class="text-secondary">
+              {{ timeline.short_cut }}
+            </h4>
+            <span class="text-muted">{{ timeline.update_time }}</span>
+            <div class="markdown-body">
+              {{ timeline.update_content|safe }}
+            </div>
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+    </section>
+  </div>
+
+
+{% endblock %}

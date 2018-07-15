@@ -1,0 +1,34 @@
+{% load comment_tags staticfiles %}
+<div class="card" id="comment_card">
+  <div class="card-title">
+    <h4 id="comment-textarea-title">提交评论</h4>
+  </div>
+    {% if user.is_authenticated %}
+      <div class="card-body">
+        <form id="comment_form" action="{% url 'comment_update' %}" method="POST" style="overflow: hidden"
+            novalidate>
+          <lable class="text-secondary f-17"><strong>欢迎你，{{ user.get_nickname }}。</strong></lable>
+          <div id="reply_content_container" style="display: none">
+            <p>回复</p>
+            <div id="reply_content" class="markdown-body ml-4 mr-4 mb-2"></div>
+          </div>
+          {% csrf_token %}
+          {% get_comment_form blog as comment_form %}
+          {% for field in comment_form %}
+            {{ field }}
+          {% endfor %}
+          <span id="comment_error" class="text-danger float-left"></span>
+          <div class="float-right">
+            <botton class="btn btn-outline-danger mt-3 mr-2" id="cancel-comment">取消评论</botton>
+            <input type="submit" value="提交评论" class="btn btn-outline-primary float-right mt-3" >
+          </div>
+        </form>
+      </div>
+      <script src="{% static 'editor.js' %}"></script>
+    {% else %}
+      <div class="card-body text-center ml-2 mr-2" id="unsign_text">
+        <span>您需要<a class="text-info" href="{% url 'login' %}?from={{ request.get_full_path }}" >登录</a>才能发表您的想法。还没有账号？<a class="text-info" href="{% url 'signup' %}" >注册</a>一个吧！</span>
+      </div>
+    {% endif %}
+  </div>
+

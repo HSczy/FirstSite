@@ -1,0 +1,84 @@
+{% load comment_tags like_tags staticfiles%}
+<div class="card" id="comment_card">
+  <div class="card-title">
+    <h4 id="comment-area-title">评论列表|共有{% get_comments_counts blog %}条评论</h4>
+  </div>
+  <div id="comment_list" class="card-body">
+  {% get_root_comments blog as root_comments %}
+  {% for comment in root_comments %}
+    <div class="card root-card mb-2" id="root_{{ comment.pk }}">
+      <div class="card-body">
+        <div class="row">
+          <div class="container" id="comment-detail">
+            <div id="avatar-div">
+              <img src="{{ comment.comment_user.get_avatar }}" alt="{{ comment.comment_user }}" id="avatar">
+            </div>
+            <div class="container text-left pl-1 ml-2">
+              <a href="javascript:reply({{ comment.pk }})" class="float-right small btn text-muted p-0 f-16">
+                回复</a>
+              <div class="like float-right pr-2" onclick="likeChange(this,'{% get_content_type comment %}'
+                      ,{{ comment.pk }})">
+                <span class="{% get_like_status comment %} fa-heart" id="like_change" ></span>
+                <span class="like_num">{% get_like_count comment %}</span>
+              </div>
+              <p class="mb-0 f-15"><strong>{{ comment.comment_user.get_nickname }}</strong>
+              {% if comment.comment_user.is_superuser %}
+                <small class="text-danger">[博主]</small>
+              {% endif %}
+              </p>
+              <p class="mb-0 text-muted f-12">
+                <small>{{ comment.created_time|date:'Y-m-d H:i:s' }}</small>
+              </p>
+            </div>
+          </div>
+          <div class="container markdown-body pl-5 ml-4 f-16" id="comment_{{ comment.pk }}">
+            {{ comment.get_md_text|safe }}
+          </div>
+        </div>
+      </div>
+      {% for reply in comment.root_comment.all %}
+        <div class="card child-card ml-4">
+          <div class="card-body">
+            <div class="row">
+              <div class="container" id="comment-detail">
+                <div id="avatar-div">
+                  <img src="{{ reply.comment_user.get_avatar }}" alt="{{ reply.comment_user }}" id="avatar">
+                </div>
+                <div class="container text-left pl-1 ml-2">
+                  <a href="javascript:reply({{ reply.pk }})"
+                     class="float-right small text-muted btn p-0 f-16">回复</a>
+                  <div class="like float-right pr-2" onclick="likeChange(this,'{% get_content_type reply %}'
+                      ,{{ reply.pk }})">
+                    <span class="{% get_like_status reply %} fa-heart" id="like_change" ></span>
+                    <span class="like_num">{% get_like_count reply %}</span>
+                  </div>
+                  <p class="mb-0 f-15"><strong>{{ reply.comment_user.get_nickname}}
+                    {% if reply.comment_user.is_superuser %}
+                      <small class="text-danger">[博主]</small>
+                    {% endif %}
+                    <i class="fas fa-share"></i>
+                    {{ reply.reply_to.get_nickname }}</strong>
+                    {% if reply.reply_to.is_superuser %}
+                      <small class="text-danger">[博主]</small>
+                    {% endif %}
+                  </p>
+                  <p class="mb-0 text-muted f-12">
+                    <small>{{ reply.created_time|date:'Y-m-d H:i:s' }}</small>
+                  </p>
+                </div>
+              </div>
+              <div class="container markdown-body pl-5 ml-4 f-16" id="comment_{{ reply.pk }}">
+                {{ reply.get_md_text|safe }}
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% empty %}
+    <div class="card-body text-center">
+      <span id="no-comment">暂无评论，欢迎尬聊</span>
+    </div>
+  {% endfor %}
+</div>
+</div>

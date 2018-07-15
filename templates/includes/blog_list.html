@@ -1,0 +1,29 @@
+{% load read_statistic_tags comment_tags like_tags %}
+
+
+<div class="media mb-2 p-2">
+  <div class="align-self-center mr-2 mr-lg-3 w-25">
+    <a href="{% url 'blog_detail' blog.slug %}" target="_blank">
+      <img class="w-100" src="{{ blog.cover.url }}" alt="{{ blog.title }}" class="blog-img">
+    </a>
+  </div>
+  <div class="media-body">
+    <h2 class="text-secondary f-17 mb-0 "><a href="{% url 'blog_detail' blog.slug %}" target="_blank">{{ blog.title }}</a></h2>
+    <small class='text-muted'><img class="avatar rounded-circle" src="{{ blog.auth.get_avatar }}" alt="{{ blog.auth }}"
+    >{{ blog.auth.get_nickname }}
+      <i class="far fa-clock">{{ blog.created_time|date:"Y/m/d H:i:s" }}</i></small>
+    <p class="f-15  mb-2 d-none d-sm-block">{{ blog.content|safe|striptags|truncatechars:130 }}</p>
+    <p class="f-15  mb-2 d-block d-sm-none">{{ blog.content|safe|striptags|truncatechars:64 }}</p>
+
+    <p class="mb-0 f-12">
+      <a class="text-danger" href="{% url 'blog_category' blog.category.slug_name %}" title="查看此分类下的所有文章"><i class="far
+      fa-bookmark"></i>&nbsp;{{ blog.category }}</a>&nbsp;&nbsp;
+      <span><i class="far fa-eye"></i> {% read_num_count blog %}</span>&nbsp;&nbsp;
+      <a href="{% url 'blog_detail' blog.slug %}#comment-area" title="查看文章的讨论">
+        <i class="far fa-comments"> {% get_comments_counts blog %}</i>
+      </a>&nbsp;&nbsp;
+      <span>
+        <i class="fas fa-heart text-danger"></i>&nbsp;&nbsp;{% get_like_count blog %}
+      </span>
+  </div>
+</div>
