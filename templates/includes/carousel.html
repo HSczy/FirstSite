@@ -18,7 +18,7 @@
         div class="carousel-item">
       {% endif %}
       <a href="{{ carousel.blog_url }}">
-      <img class="w-100" src="{{ carousel.carousel_img }}" title="{{ carousel.title }}">
+      <img class="w-100" src="{{ carousel.carousel_img.url }}" title="{{ carousel.title }}">
       </a>
     </div>
     {% endfor %}
