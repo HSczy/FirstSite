@@ -175,6 +175,10 @@ footer {
     color:#212529;
     border-bottom: 2px solid #646464;
 }
+
+#blog-list img{
+    max-height: 150px;
+}
 #blog-list .avatar{
     width: 1.2em;
     height: 1.2em;
